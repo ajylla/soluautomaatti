@@ -415,7 +415,7 @@ def print_progress(step, total):
         print(message)
 
 
-def main(n_steps, size=[100, 100], filename=None):
+def main(n_steps, size=[50, 50], filename=None, animate=True):
     '''
     Main function of the program. Creates the GameBoard object, runs
     the simulation and saves the initial configuration of the board.
@@ -423,8 +423,12 @@ def main(n_steps, size=[100, 100], filename=None):
     Args:
         n_steps (int): number of timesteps to simulate
         size (list): size of the board in format 
-                     [horizontal length, vertical length] (optional)
-        filename (str): name of a file to load (optional)
+                     [horizontal length, vertical length] (default: [50, 50])
+        filename (str): name of a file to load (default: None)
+        animate (bool): toggle animation (default: True)
+
+    Returns:
+        float: simulation time in seconds
     '''
 
     # Start time of simulation.
@@ -458,12 +462,16 @@ def main(n_steps, size=[100, 100], filename=None):
     # This does not take into account the time to
     # save the .gif file, which is surprisingly slow.
     end_time = time()
-    print("Took: " + str(round(end_time - start_time, 1)) + " s.")
+    delta_time = end_time - start_time
+    print("Took: " + str(round(delta_time, 1)) + " s.")
 
     # Animates the board. This also saves the animation as
     # a .gif file.
     # Note that this file is also overwritten each time.
-    gameBoard.animate()
+    if(animate):
+        gameBoard.animate()
+
+    return delta_time
 
 # Main guard.
 if(__name__ == "__main__"):
