@@ -259,6 +259,7 @@ class GameBoard:
         # such that x and y have the same scaling.
         ax = plt.axes()
         ax.set_aspect('equal')
+        ax.set(xticks=[], yticks=[])
 
         # Inverts the y axis so the board appears the same
         # orientation as the board textfiles.
@@ -267,11 +268,15 @@ class GameBoard:
         # Plots a colormesh. Alive cells appear as black and dead ones white.
         plt.pcolormesh(self.history[frame], cmap='Greys', vmin=0, vmax=1)
 
-    def animate(self):
+    def animate(self, start_delay=None):
         '''
         Animates the board configuration history using draw function.
         Also saves the animation to a .gif file.
         '''
+
+        if start_delay is not None:
+            for _ in range(start_delay):
+                self.history = [self.history[0]] + self.history
 
         # Number of frames is the length of history list.
         n_frames = len(self.history)
@@ -284,7 +289,7 @@ class GameBoard:
 
         # Creates the figure on which to draw.
         fig = plt.figure()
-        
+
         # Calls the matplotlib FuncAnimation function.
         # Animation must be stored in a variable even if it is
         # never used for the animation to play correctly.
@@ -382,7 +387,7 @@ def save_board(board, filename):
 
 def print_progress(step, total):
     '''
-    Prints a progress bar. Stolen from our example programs.
+    Prints a progress bar.
 
     Args:
         step (int): current step/progress of the program
@@ -415,7 +420,7 @@ def print_progress(step, total):
         print(message)
 
 
-def main(n_steps, size=[50, 50], filename=None, animate=True):
+def main(n_steps, size=[50, 50], filename=None, animate=True, start_delay=None):
     '''
     Main function of the program. Creates the GameBoard object, runs
     the simulation and saves the initial configuration of the board.
@@ -426,6 +431,7 @@ def main(n_steps, size=[50, 50], filename=None, animate=True):
                      [horizontal length, vertical length] (default: [50, 50])
         filename (str): name of a file to load (default: None)
         animate (bool): toggle animation (default: True)
+        start_delay (int): start delay of the animation in frames
 
     Returns:
         float: simulation time in seconds
@@ -469,7 +475,7 @@ def main(n_steps, size=[50, 50], filename=None, animate=True):
     # a .gif file.
     # Note that this file is also overwritten each time.
     if(animate):
-        gameBoard.animate()
+        gameBoard.animate(start_delay=start_delay)
 
     return delta_time
 
@@ -479,4 +485,4 @@ if(__name__ == "__main__"):
     #main(100, filename='glider.txt')
     #main(100, filename='glider-gun.txt')
     #main(20, filename='pulsar.txt')
-    main(100, size=[50, 50])
+    main(100, size=[50, 50], animate=True, start_delay=1)
